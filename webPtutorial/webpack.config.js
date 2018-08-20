@@ -1,11 +1,15 @@
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: './src/index.js',
     output: {
-        filename:'bundle.js',
+        filename:'bundle.[contenthash].js',
         path: path.resolve(__dirname, './build'),
-        publicPath:'build/'
+        publicPath:''
     },
     mode: 'none',
     module:{
@@ -20,14 +24,14 @@ module.exports = {
             {
                 test:/\.css$/,
                 use:[
-                    'style-loader', 'css-loader'
+                    MiniCssExtractPlugin.loader, 'css-loader'
                 ]
             }
             ,
             {
                 test:/\.scss$/,
                 use:[
-                    'style-loader', 'css-loader', 'sass-loader'
+                    MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'
                 ]
             },
             {
@@ -41,5 +45,19 @@ module.exports = {
                 }
             }
         ]
-    }
+    },
+    plugins: [
+        new UglifyJsPlugin(),
+        new MiniCssExtractPlugin({
+            filename:'style.[contenthash].css'
+        }),
+        new CleanWebpackPlugin('build'),
+        new HtmlWebpackPlugin({
+            title: 'Mother Fucker!!',
+            filename:'mtfk.html',
+            meta: {
+                viewport: 'width = device-width, initial-scale=2'
+            }
+        })
+    ]
 }
